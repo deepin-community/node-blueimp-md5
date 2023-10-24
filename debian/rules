@@ -1,4 +1,60 @@
 #!/usr/bin/make -f
 
+STEMS = md5
+
+# generate documentation unless nodoc requested
+ifeq (,$(filter nodoc,$(DEB_BUILD_OPTIONS)))
+DOCS = README.html README.txt
+endif
+
+ESLINT = eslint
+MOCHA = mocha --no-timeout
+# normalize output with TAP where possible unless terse requested
+ifeq (,$(filter terse,$(DEB_BUILD_OPTIONS)))
+ESLINT += --format tap
+MOCHA += --reporter tap
+else
+ESLINT += --format unix
+MOCHA += --reporter dot --no-colors
+endif
+
+override_dh_auto_build: \
+ $(patsubst %,debian/js/%.min.js.gz,$(STEMS)) \
+ $(DOCS)
+
+override_dh_auto_test:
+	$(ESLINT) --no-eslintrc --env node js/md5.js
+	$(ESLINT) --no-eslintrc --env browser debian/js
+	$(MOCHA)
+
+override_dh_installdocs:
+	dh_installdocs --all -- $(DOCS)
+
+# use staging dir for browser library (easier to install and clean)
+debian/js/%.js: js/%.js
+	mkdir --parents debian/js
+	cp --force --target-directory debian/js $<
+
+# optimize JavaScript for browser use
+# * include source-map
+debian/js/%.min.js: debian/js/%.js
+	uglifyjs --compress --mangle \
+		--source-map "base='$(abspath $(dir $@))',url='$(notdir $@).map'" \
+		--output $@ \
+		-- $<
+
+# pre-compress for browser use
+%.gz: %
+	pigz --force --keep -11 -- $<
+	brotli --force --keep --best --suffix=.brotli -- $<
+
+%.html: %.md
+	cmark-gfm $< > $@
+
+%.txt: %.md
+	cmark-gfm --to plaintext $< > $@
+
 %:
 	dh $@
+
+.SECONDARY:

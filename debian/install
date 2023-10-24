@@ -1,0 +1,2 @@
+debian/js/* /usr/share/javascript/blueimp-md5
+package.json js /usr/share/nodejs/blueimp-md5

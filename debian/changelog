@@ -1,5 +1,20 @@
-template-repository (1.0-1) unstable; urgency=medium
+node-blueimp-md5 (2.19.0~ds-3) unstable; urgency=medium
 
-  * Initial release
+  [ Debian Janitor ]
+  * Set upstream metadata fields: Repository, Repository-Browse.
+  * Update standards version to 4.6.1, no changes needed.
 
- -- Tsic404 <liuheng@deepin.org>  Sat, 28 Jan 2023 13:46:49 +0800
+ -- Jelmer Vernooĳ <jelmer@debian.org>  Mon, 21 Nov 2022 09:09:27 +0000
+
+node-blueimp-md5 (2.19.0~ds-2) unstable; urgency=medium
+
+  * simple rebuild
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 19 Feb 2022 10:32:13 +0100
+
+node-blueimp-md5 (2.19.0~ds-1) unstable; urgency=low
+
+  * initial release;
+    closes: bug#867290
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 14 Feb 2022 01:48:38 +0100
